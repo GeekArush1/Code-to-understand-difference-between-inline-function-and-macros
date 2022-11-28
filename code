@@ -1,0 +1,85 @@
+#include <iostream>
+using namespace std;
+#define b 6 //basic definition of macros
+# define square(x)  (x*x) //augmented macros
+# define cube(x)    (square(x)*x) //nested macros
+inline void printSum(int n1,int n2){ //syntax of inline function, it is always terminated by curly braces
+    cout<<n1+n2<<endl;
+}
+inline void loop(int n1){ //loops are not allowed inside inline functions, compiler calls the function in such cases
+    for(int i=0;i<n1;i++){
+        cout<<"Hi"<<endl;
+    }
+}
+inline int factorial(int n1){ //recursion is not allowed inside inline functions
+    if(n1==0){
+        return 1;
+    }
+    else if(n1==1){
+        return 1;
+    }
+    else{
+        return n1* factorial(n1-1);
+    }
+}
+inline float mult(int n1,int n2){  //inlining is ignored when  If a function return type is other than void, and the return statement doesn’t exist in function body
+    cout<<n1*n2<<endl;
+}
+inline void switch_goto(int n2){ // switch and goto statements are again not allowed in inline functions
+    switch(n2){
+        a:case 5:
+            cout<<"switch case used"<<endl;
+            break;
+        default:
+            goto a;
+    }
+}
+inline void subt(int n1,int n2){ //static variables can't be used in inline functions
+    static int n3=5;
+    cout<<n1-n2-n3<<endl;
+}
+inline void show(int n1) { // it is only useful to make the function inline if the time spent during a function call is more compared to the function body execution time. In this case, inlining takes more time than function call.
+    cout << n1 << endl;
+}
+inline void squarex(int n1){
+    int s=n1*n1;
+    cout<<s<<endl;
+}
+class test_macros{
+public:
+    inline void access_private(){//inline function can access private member variable
+        cout<<b2<<endl;
+    }
+//    virtual inline void print_c_3(){
+//        cout<<c+3<<endl;
+//    }
+//C++ compiler cannot perform inlining if the function is virtual as virtual function is resolved at runtime instead of compile time.
+    //#define MAC(test_macros::c) //error as macros can't access private member of a function
+    void print_c(){//functions defined inside class are implicitly inline especially when they have a small body
+        cout<<c<<endl;
+    }
+private:
+    int b2=b+1;
+    int c=10;
+};
+int main() {
+    int n1=5;
+    int n2=6;
+    printSum(n1,n2);
+    loop(n1);
+    int x=factorial(n1);
+    cout<<x<<endl;
+    mult(n1,n2);
+    switch_goto(n2);
+    subt(n1,n2);
+    show(n1);
+    int ans= square(n1);
+    cout<<ans<<endl;
+    squarex(n1);//inline function can be used over macros.
+    int ans1= cube(n1);
+    cout<<ans1<<endl;
+    test_macros obj1;
+    obj1.access_private();
+    obj1.print_c();
+    return 0;
+}
